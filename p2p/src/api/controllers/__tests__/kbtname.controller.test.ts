@@ -1,11 +1,25 @@
 import request from "supertest";
 import app from "../../../app";
 const fs = require('fs');
-const jwt = require('jsonwebtoken');
+
+const { encode, decode } = require('@stablelib/base64')
+const jose = require('jose')
+
+const {
+    sign,
+    //verify,
+    generateKeyPairFromSeed,
+    //extractPublicKeyFromSecretKey,
+    //convertPublicKeyToX25519,
+    //convertSecretKeyToX25519
+} = require('@stablelib/ed25519')
+
 
 beforeAll(() => {});
 
 //TODO: set key to random value, check random value is returned 
+
+
 
 describe("kbt Controller", () => {
 
@@ -41,56 +55,34 @@ describe("kbt Controller", () => {
 
 		// JWT reference
 
-		var privateKEY  = fs.readFileSync('./test/private.key', 'utf8');
-		var publicKEY  = fs.readFileSync('./test/public.key', 'utf8');
-		var payload = {
-			kbt: 'deadbeef',
-			dest: 'bafyx0x0x0x0x0',
-			pubkey: publicKEY
-		};
-		var i  = 'Mysoft corp';   
-		var s  = 'some@user.com';   
-		var a  = 'http://mysoftcorp.in';
-		var signOptions = {
-			issuer:  i,
-			subject:  s,
-			audience:  a,
-			expiresIn:  "12h",
-			algorithm:  "RS256"   // RSASSA [ "RS256", "RS384", "RS512" ]
-		};
-		var token = jwt.sign(payload, privateKEY, signOptions);
-		//console.log("Token :" + token);
-		/*
-		 *  ====================   JWT Verify =====================
-		 *  */
-		var verifyOptions = {
-			issuer:  i,
-			subject:  s,
-			audience:  a,
-			expiresIn:  "12h",
-			algorithm:  ["RS256"]
-		};
+		// auth keys
+		const masterKeyMaterial = generateKeyPairFromSeed(random32bytes())
 
-		try {
-			// extract the public key from the payload and use it to verify
-			var decoded = jwt.decode(token);
-			var extractedPK = decoded.pubkey;
+		var privateKey  : string = masterKeyMaterial.secretKey;
+		var publicKey  : string  = masterKeyMaterial.publicKey;
 
-			try {
-				var notlegit = jwt.verify(token, "badkey", verifyOptions);
-			} catch {
-				// should have failed
-				expect(true).toEqual(true);
-			}
+		var jprivateKey = await jose.importSPKI(encode(privateKey), 'EdDSA')
 
-			var legit = jwt.verify(token, extractedPK, verifyOptions);
-			//console.log("\nJWT verification result: " + JSON.stringify(legit));
 
-			expect(legit.kbt).toEqual('deadbeef');
+		const jwt = await new jose.SignJWT({ 'urn:example:claim': true })
+		  .setProtectedHeader({ alg: 'Ed25519' })
+		  .setIssuedAt()
+		  .setIssuer('urn:example:issuer')
+		  .setAudience('urn:example:audience')
+		  .setExpirationTime('2h')
+		  .setSubject(publicKey)
+		  .sign(jprivateKey)
 
-		} catch {
-			// error
-			expect(true).toEqual(false);
-		}
+		console.log(jwt)
+
 	});
 });
+
+function random32bytes(){
+	    var abc = "abcdefghijklmnopqrstuvwxyz1234567890".split("");
+	    var token=""; 
+	    for(var i=0;i<32;i++){
+		             token += abc[Math.floor(Math.random()*abc.length)];
+		        }
+	    return token; //Will return a 32 bit "hash"
+}
