@@ -2,9 +2,9 @@ import request from "supertest";
 import app from "../../../app";
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
-
 const { encodeURLSafe, decodeURLSafe } = require('@stablelib/base64')
 const sha256 = require('@stablelib/sha256')
+
 beforeAll(() => {});
 
 //TODO: set key to random value, check random value is returned 

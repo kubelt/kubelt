@@ -10,3 +10,6 @@ build
 
 # keys
 test/*.key
+
+# hypercore
+my-first-dataset
