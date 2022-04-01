@@ -21,7 +21,7 @@ Kubelt is an open source toolkit for building peer-to-peer dapps. Using a CMS da
 
 Kubelt is the web3 CMS, built on top of a distributed semantic graph. This document outlines a set of desired properties, components, a theoretical framework, and a high-level discussion of the system design for Kubelt.
 
-A semantic graph is a data structure that encodes relationships between data points. This lets us add a layer of meaning to the data stored on web3. We can, for instance, tell that a content address like _bafyreiabc123_ is actually, for example, the first frame of a video, the configuration for a metaverse object, localized UI text, etc.
+A semantic graph is a data structure that encodes relationships between data points. This lets us add a layer of meaning to the data stored on web3. We can, for instance, tell that a content address like `bafyreiabc123...` is actually, for example, the first frame of a video, the configuration for a metaverse object, localized UI text, etc.
 
 The system enables sharing of arbitrary data, including without limitation text, images, rich media, executable objects (e.g., WASM), metadata, etc. All of this is stored in a graph distributed over a peer-to-peer network.
 
