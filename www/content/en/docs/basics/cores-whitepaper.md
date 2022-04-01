@@ -1,7 +1,7 @@
 ---
-title: "Kubelt CMS Whitepaper"
-description: "Kubelt is an open source toolkit for building peer-to-peer dapps. Using a CMS dapp, SDK, and peer node, developers can build dapps quickly using open standards, allowing maximum interoperability, easy scalability, and high availability. This paper describes the full architecture of a system composed from these components and its theoretical foundations."
-lead: "A physical approach to distributed semantic graphs."
+title: "Kubelt Cores Whitepaper"
+description: "Kubelt cores are the composable nodes of a decentralized, distributed cloud computing environment. They provide storage, compute, networking, and cryptographic capabilities. This paper describes the theoretical construction of the core as an object and the logical organization of cores into a distributed graph. Physical implemnentation is touched on at a high-level as it relates to addressing practical efficiency concerns."
+lead: "A description of the logical node that composes into a distributed cloud."
 date: 2021-12-01T00:00:00+00:00
 images: []
 menu:
@@ -9,14 +9,15 @@ menu:
     parent: "basics"
 weight: 150
 toc: true
-draft: true
 ---
 
-_December 2021. By [Alexander Flanagan](mailto:alex@kubelt.com), [Adrian Maurer](mailto:adrian@kubelt.com), and [Robert Medeiros](mailto:rob@kubelt.com). Special thanks to the team @ [Protocol Labs](https://protocol.ai)._
+_April 2022. By [Alexander Flanagan](mailto:alex@kubelt.com), and [Adrian Maurer](mailto:adrian@kubelt.com). Special thanks to the team @ [Heavybit Industries](https://https://www.heavybit.com/)._
 
 ## Abstract
 
-Kubelt is an open source toolkit for building peer-to-peer dapps. Using a CMS dapp, SDK, and peer node, developers can build dapps quickly using open standards, allowing maximum interoperability, easy scalability, and high availability. This paper describes the full architecture of a system composed from these components and its theoretical foundations.
+Kubelt cores are the composable nodes of a decentralized, distributed cloud computing environment. They provide storage, compute, networking, and cryptographic capabilities. This paper describes the theoretical construction of the core as an object and the logical organization of cores into a distributed graph. Physical implemnentation is touched on at a high-level as it relates to addressing practical efficiency concerns.
+
+**Edit point.**
 
 ## Introduction
 
