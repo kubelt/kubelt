@@ -65,6 +65,7 @@
 (re-frame/reg-event-db
  ::authenticate!
  (fn [db [_ new-ctx]]
+   (prn new-ctx)
    (let [wallet-address (get-in new-ctx [:crypto/wallet :wallet/address])]
      (-> (sdk.core/authenticate! new-ctx wallet-address)
          (.then (fn [auth-ctx]

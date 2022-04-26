@@ -48,19 +48,46 @@
   {:pre [(every? string? [core nonce])]}
   (let [client (get sys :client/http)
         scheme (get-in sys [:client/p2p :http/scheme])
-        host (get-in sys [:client/p2p :http/host])
-        port (get-in sys [:client/p2p :http/port])
+        host   (get-in sys [:client/p2p :http/host])
+        port   (get-in sys [:client/p2p :http/port])
 
-        body {:nonce nonce :signature signature}
+        body     {:nonce nonce :signature signature}
         body-str (lib.json/edn->json-str body)
 
         path (cstr/join "" ["/@" core "/auth/verify"])
 
         request {:com.kubelt/type :kubelt.type/http-request
-                 :http/method :post
-                 :http/body body-str
-                 :uri/scheme scheme
-                 :uri/domain host
-                 :uri/port port
-                 :uri/path path}]
+                 :http/method     :post
+                 :http/body       body-str
+                 :uri/scheme      scheme
+                 :uri/domain      host
+                 :uri/port        port
+                 :uri/path        path}]
+    (http/request! client request)))
+
+(defn nfts!
+  "Fetch a Core's associated NFTs"
+  [sys core jwt]
+  {:pre [(every? string? [core jwt])]}
+  (let [client (get sys :client/http)
+        scheme (get-in sys [:client/p2p :http/scheme])
+        host   (get-in sys [:client/p2p :http/host])
+        port   (get in sys [:client/p2p :https/port])
+
+        body {}
+        body-str (lib.json/edn->json-str body)
+
+        path (cstr/join "" ["/@" core "/nft"])
+
+        ;; Make an HTTP request to p2p system, passing along the user's
+        ;; wallet address. Expect a list of NFTs in return
+
+        ;; Returns a promise.
+        request {:com.kubelt/type :kubelt.type/https-request
+                 :http/method   :get
+                 :http/body     body-str
+                 :uri/scheme    scheme
+                 :uri/domain    host
+                 :uri/port      port
+                 :uri/path      path}]
     (http/request! client request)))
