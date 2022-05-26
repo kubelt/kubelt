@@ -22,6 +22,8 @@
    [fipp/fipp "0.6.26"]
    ;; a micro-framework for building data-driven applications
    [integrant/integrant "0.8.0"]
+   ;; A pure Clojure/Script URI library
+   [lambdaisland/uri "1.13.95"]
    ;; fast JSON encoding and decoding
    [metosin/jsonista "0.3.5"]
    ;; data-driven schemas for Clojure/Script
