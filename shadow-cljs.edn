@@ -53,7 +53,9 @@
   ;; react for clojure
   [reagent "1.1.1"]
   ;; redux for reagent
-  [re-frame "1.2.0"]]
+  [re-frame "1.2.0"]
+  ;; A pure Clojure/ClojureScript URI library
+  [lambdaisland/uri "1.13.95"]]
 
  ;;:nrepl {:init-ns user.shared}
 
