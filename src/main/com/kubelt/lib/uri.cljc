@@ -54,6 +54,13 @@
     (query->map query-str options)
     query-str))
 
+(defn- extract
+  ([v k]
+   (extract v k identity))
+  ([v k f]
+   (let [[k k2] (if (vector? k) k [k k])]
+     (some->> v k f (hash-map k2)))))
+
 ;; parse
 ;; -----------------------------------------------------------------------------
 
@@ -73,32 +80,14 @@
     (let [options (merge parse-defaults options)
           uri (lambda/uri s)]
       (merge {:com.kubelt/type :kubelt.type/uri}
-             ;; :uri/scheme
-             (when-let [scheme (:scheme uri)]
-               (let [scheme (keyword scheme)]
-                 {:uri/scheme scheme}))
-             ;; :uri/domain
-             (when-let [domain (:host uri)]
-               {:uri/domain domain})
-             ;; :uri/port
-             (when-let [port (:port uri)]
-               {:uri/port port})
-             ;; :uri/path
-             (when-let [path (:path uri)]
-               {:uri/path path})
-             ;; :uri/fragment
-             (when-let [fragment (:fragment uri)]
-               {:uri/fragment fragment})
-             ;; :uri/query
-             (when-let [query (:query uri)]
-               (let [query (parse-query query options)]
-                 {:uri/query query}))
-             ;; :uri/user
-             (when-let [user (:user uri)]
-               {:uri/user user})
-             ;; :uri/password
-             (when-let [password (:password uri)]
-               {:uri/password password}))))))
+             (extract uri [:scheme :uri/scheme] keyword)
+             (extract uri [:host :uri/domain])
+             (extract uri [:port :uri/port])
+             (extract uri [:path :uri/path])
+             (extract uri [:fragment :uri/fragment])
+             (extract uri [:query :uri/query] #(parse-query % options))
+             (extract uri [:user :uri/user])
+             (extract uri [:password :uri/password]))))))
 
 ;; unparse
 ;; -----------------------------------------------------------------------------
