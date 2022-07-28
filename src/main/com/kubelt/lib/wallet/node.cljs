@@ -8,6 +8,7 @@
   (:require
    ["@ethersproject/wallet" :refer [Wallet]])
   (:require
+   [com.kubelt.lib.io.node :as io]
    [com.kubelt.lib.error :as lib.error]
    [com.kubelt.lib.io.node :as lib.io]
    [com.kubelt.lib.path :as lib.path]
@@ -44,7 +45,7 @@
   [app-name wallet-name]
   (lib.promise/promise
    (fn [resolve reject]
-     (-> (lib.io/ensure-kubelt-dir& app-name "wallets")
+     (-> (lib.io/ensure-dir& (lib.io/kubelt-dir app-name "wallets"))
          (lib.promise/then
           (fn [_]
             (-> (lib.io/fs-exists?& (name->path app-name wallet-name))
@@ -93,7 +94,7 @@
   [app-name wallet-name password]
   (lib.promise/promise
    (fn [resolve reject]
-     (-> (lib.io/ensure-kubelt-dir& app-name "wallets")
+     (-> (lib.io/ensure-dir& (lib.io/kubelt-dir app-name "wallets"))
          (lib.promise/then
           (fn [wallet-dirp]
             (-> (has-wallet?& app-name wallet-name)
@@ -146,7 +147,7 @@
   [app-name]
   (lib.promise/promise
    (fn [resolve reject]
-     (-> (lib.io/ensure-kubelt-dir& app-name "wallets")
+     (-> (lib.io/ensure-dir& (lib.io/kubelt-dir app-name "wallets"))
          (lib.promise/then #(resolve (js->clj (.readdir fs-promises %))))
          (lib.promise/catch reject)))))
 
@@ -187,7 +188,7 @@
                      (reject error)))))
              ;; Returns the path of the wallet file to write.
              (wallet-path []
-               (-> (lib.io/ensure-kubelt-dir& app-name "wallets")
+               (-> (lib.io/ensure-dir& (lib.io/kubelt-dir app-name "wallets"))
                    (lib.promise/then #(.join path % wallet-name))))]
        (let [path& (wallet-path)
              wallet& (from-mnemonic mnemonic)]
@@ -198,7 +199,7 @@
                 (-> (lib.promise/all [path& wallet&])
                     (lib.promise/then
                      (fn [[wallet-dirp wallet-js]]
-                       (-> (.writeFile fs-promises wallet-dirp wallet-js)
+                       (-> (io/write-to-file& wallet-dirp wallet-js)
                            (lib.promise/then (fn [_] (resolve {:wallet/name wallet-name})))
                            (lib.promise/catch (fn [e] (reject (lib.error/from-obj e)))))))
                     (lib.promise/catch (fn [e] (reject (lib.error/from-obj e)))))))))))))
